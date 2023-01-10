@@ -13,8 +13,6 @@ import { setAuthToken } from "./services/setAuthToken";
 
 function App() {
 
-  console.log(process.env.REACT_APP_MY_ENVIRONMENT_VARIABLE)
-
   const JWT = useSelector(selectJWT);
   if (JWT) setAuthToken(JWT)
 
