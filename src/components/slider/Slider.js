@@ -14,7 +14,7 @@ const Slider = () => {
     let intervalTime = 5000;
 
     const fetchCategories = async () => {
-        const res = await axios.get('http://localhost:8888/categories/getAllShop')
+        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/categories/getAllShop`)
         .catch(function (e) {
           if(e.response) {
             console.log(e.response.data.message)

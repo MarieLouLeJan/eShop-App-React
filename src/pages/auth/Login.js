@@ -9,7 +9,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER, SET_IS_ADMIN } from '../../redux/slices/authSlice';
 
-const googleURL = `https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http%3A%2F%2Flocalhost%3A8888%2Fauth%2Fgoogle&client_id=563664428847-bvae1h3ccoke4a4qp32kb0il3i8228ch.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email`
+const googleURL = process.env.REACT_APP_GOOGLE_URL
 
 const Login = () => {
 
@@ -38,7 +38,7 @@ const Login = () => {
 
     console.log("coucou")
 
-    const res = await axios.post('http://localhost:8888/users/login', user)
+    const res = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/users/login`, user)
     .catch(function (e) {
       if(e.response) {
         setIsLoading(false)

@@ -15,7 +15,7 @@ function AuthGoogle() {
 
     useEffect(() => {
         const handleLogIn = async () => {
-        const res = await axios.get('http://localhost:8888/auth/me', {
+        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/auth/me`, {
             withCredentials: true,
         })
             .catch(function (e) {

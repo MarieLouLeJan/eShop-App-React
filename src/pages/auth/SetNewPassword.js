@@ -22,7 +22,7 @@ const SetNewPassword = () => {
       return
     }
 
-    const res = await axios.patch(`http://localhost:8888/reset-password/${token}`, { password })
+    const res = await axios.patch(`${process.env.REACT_APP_API_ROOT_URL}/reset-password/${token}`, { password })
     .catch(function (e) {toast.error(e.response.data.message)})
 
     if(res) {
@@ -30,29 +30,9 @@ const SetNewPassword = () => {
       navigate('/login')
     }
 
-    // try {
-    //   let res = await fetchResetPassword({password});
-    //   toast.success(res.message)
-    //   navigate('/login')
-    // } catch(e) {
-    //   toast.error(e.msg, e.status)
-    // }
   }
 
-  // const fetchResetPassword = async (body) => {
-  //   const res = await fetch(`http://localhost:8888/reset-password/${token}`, {
-  //     method: 'PATCH',
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: JSON.stringify(body)
-  //   });
-  //   if(!res.ok) {
-  //     const error = await res.json()
-  //     throw {msg: error.message, status: error.status};
-  //   }
-  //   const data = await res.json()
-  //   return data
-  // }
-  
+
   return (
 
     <section className={`container ${styles.auth}`}>

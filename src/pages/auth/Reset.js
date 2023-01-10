@@ -14,7 +14,7 @@ const Reset = () => {
   const resetPassword = async (e) => {
     e.preventDefault();
 
-    const res = await axios.patch('http://localhost:8888/reset-password', { email })
+    const res = await axios.patch(`${process.env.REACT_APP_API_ROOT_URL}/reset-password`, { email })
     .catch(function (e) {toast.error(e.response.data.message)})
 
     if(res) {

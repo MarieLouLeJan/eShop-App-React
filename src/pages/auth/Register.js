@@ -30,7 +30,7 @@ const Register = () => {
 
     setIsLoading(false)
 
-    const res = await axios.post('http://localhost:8888/users/createOne', newUser)
+    const res = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/users/createOne`, newUser)
     .catch(function (e) { 
       if(e.response.data.message) toast.error(e.response.data.message)})
     if(res) {

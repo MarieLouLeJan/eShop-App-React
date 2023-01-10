@@ -40,7 +40,7 @@ const ViewProducts = () => {
   const deleteProduct = async (id) => {
     // We don't delete completely the product, as we still need it for the past orders. What we do here is turning the 'active' to false, then it doesn't appear on the shop
     const productUnactive = { 'active': 'false'}
-    const res = await axios.patch(`http://localhost:8888/products/updateOnePatch/${id}`, productUnactive)
+    const res = await axios.patch(`${process.env.REACT_APP_API_ROOT_URL}/products/updateOnePatch/${id}`, productUnactive)
     .catch(function (e) {
       if(e.response) {
       }

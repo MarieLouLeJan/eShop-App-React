@@ -64,7 +64,7 @@ const AddProduct = () => {
   }
 
   const createProduct = async (product) => {
-    const res = await axios.post('http://localhost:8888/products/createOne', product)
+    const res = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/products/createOne`, product)
     .catch(function (e) {
       if(e.response.data.message) toast.error(e.response.data.message)})
     if(res) {
@@ -80,7 +80,7 @@ const AddProduct = () => {
 
   const updateProduct = async () => {
     const { id, created_at, categories, product_reviews, tva, ...productToEdit } = product 
-    const res = await axios.put(`http://localhost:8888/products/updateOnePut/${id}`, productToEdit)
+    const res = await axios.put(`${process.env.REACT_APP_API_ROOT_URL}/products/updateOnePut/${id}`, productToEdit)
     .catch(function (e) {
       if(e.response.data.message) toast.error(e.response.data.message)})
     if(res) {
