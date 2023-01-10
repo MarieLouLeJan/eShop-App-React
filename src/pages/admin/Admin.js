@@ -28,7 +28,7 @@ const Admin = () => {
   }
 
   const getProducts = async () => {
-    const res = await axios.get('http://localhost:8888/products/getAllAdmin')
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/products/getAllAdmin`)
     .catch(function (e) {
       if(e.response) {
         toast.error(e.response.data.message)
@@ -38,7 +38,7 @@ const Admin = () => {
   }
 
   const getTVA = async () => {
-    const res = await axios.get('http://localhost:8888/TVA/getAll')
+    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/TVA/getAll`)
     .catch(function (e) {
       if(e.response) {
         toast.error(e.response.data.message)
