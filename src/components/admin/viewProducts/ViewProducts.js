@@ -45,7 +45,7 @@ const ViewProducts = () => {
       if(e.response) {
       }
     })
-    console.logg(res)
+    console.log(res)
   }
 
 

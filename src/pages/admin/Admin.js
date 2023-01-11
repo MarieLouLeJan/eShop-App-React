@@ -1,85 +1,72 @@
-import React, { useEffect } from 'react';
+// import { useEffect } from 'react';
 import styles from './Admin.module.scss'
 import Navbar from '../../components/admin/navbar/Navbar'
 import { Route, Routes } from 'react-router-dom';
 import Home from '../../components/admin/home/Home';
 import ViewProducts from '../../components/admin/viewProducts/ViewProducts'
 import AddProduct from '../../components/admin/addProduct/AddProduct';
+import { useGetCategoriesAdminQuery, useGetProductsAdminQuery, useGetTvaAdminQuery } from '../../redux/api/adminApi';
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { toast } from 'react-toastify';
 import { STORE_CATEGORIES, STORE_PRODUCTS, STORE_TVA } from '../../redux/slices/adminSlice';
+import { useEffect } from 'react';
+
 
 const Admin = () => {
 
   const dispatch = useDispatch()
 
-  const getCats = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/categories/getAllAdmin`)
-    .catch(function (e) {
-      if(e.response) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Object.keys(res.data.categories).forEach(function(key, index) {
-      res.data.categories[key].products.sort((a, b) => b.active - a.active)
-    })
-    return res.data.categories
-  }
+  const {
+    data: catData,
+    isSuccess: isCatSuccess,
+    isError: isCatError,
+    error: catError
+  } = useGetCategoriesAdminQuery();
 
-  const getProducts = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/products/getAllAdmin`)
-    .catch(function (e) {
-      if(e.response) {
-        toast.error(e.response.data.message)
-      }
-    })
-    return res.data.products
-  }
+  const {
+      data: prodData, 
+      isSuccess: isProdSuccess, 
+      isError: isProdError, 
+      error: prodError
+   } = useGetProductsAdminQuery()
 
-  const getTVA = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/TVA/getAll`)
-    .catch(function (e) {
-      if(e.response) {
-        toast.error(e.response.data.message)
-      }
-    })
-    return res.data.TVAs
-  }
+  const { 
+      data: tvaData, 
+      isSuccess: isTvaSuccess, 
+      isError: isTvaError, 
+      error: tvaError
+  } = useGetTvaAdminQuery()
 
   useEffect(() => {
-
-    const storeCats = async () => {
-      const categories = await getCats()
+    if(isCatSuccess) {
       dispatch(
         STORE_CATEGORIES({
-          categories
+          categories: catData.data
         })
       )
+    } else if (isCatError) {
+      console.log(catError)
     }
-    const storeProds = async () => {
-      const products = await getProducts()
+  
+    if(isProdSuccess) {
       dispatch(
         STORE_PRODUCTS({
-          products
+          products: prodData.data
         })
       )
-    }
-
-    const storeTva = async () => {
-      const tva = await getTVA()
+    } else if (isProdError){
+      console.log(prodError)
+    } 
+  
+    if(isTvaSuccess) {
       dispatch(
         STORE_TVA({
-          tva
+          tva: tvaData.data
         })
       )
+    } else if (isTvaError) {
+      console.log(tvaError)
     }
-
-    storeCats()
-    storeProds()  
-    storeTva()
-
-  }, [dispatch])
+  })
 
   return (
     <div className={styles.admin}>
@@ -97,7 +84,7 @@ const Admin = () => {
 
           </Route>
 
-          <Route path='addProduct/:id' element={<AddProduct/>}>
+          <Route path='addProduct/:param' element={<AddProduct/>}>
 
           </Route>
 

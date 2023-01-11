@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import Loader from '../../components/loader/Loader';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import { useRegisterMutation } from '../../redux/api/authApi';
 
 
 const Register = () => {
@@ -14,13 +14,23 @@ const Register = () => {
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ cPassword, setCPassword ] = useState('');
+
   const [ isLoading, setIsLoading ] = useState(false);
+
+  const [ 
+    registerUser, { 
+      isSuccess: isRegisterSucces, 
+      isError: isRegisterError, 
+      error: registerError
+    }
+  ] = useRegisterMutation()
 
   const navigate = useNavigate()
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true)
+
     if(password !== cPassword) {
       setIsLoading(false)
       toast.error(`Passwords don't match`);
@@ -28,16 +38,19 @@ const Register = () => {
     }
     const newUser = { firstname, lastname, email, password, role_id: 1};
 
-    setIsLoading(false)
+    await registerUser(newUser)
+  }
 
-    const res = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/users/createOne`, newUser)
-    .catch(function (e) { 
-      if(e.response.data.message) toast.error(e.response.data.message)})
-    if(res) {
+  useEffect(() => {
+    if(isRegisterError) {
+      setIsLoading(false)
       toast.success('Your account had been created')
       navigate('/login')
+    } else if (isRegisterError) {
+      setIsLoading(false)
+      toast.error(registerError.data.message)
     }
-  }
+  }, [registerError, isRegisterSucces, navigate, isRegisterError])
 
   return (
     <>
@@ -81,22 +94,16 @@ const Register = () => {
                   value={cPassword}
                   onChange={(e) => setCPassword(e.target.value)}/>
                 <button type='submit' className='--btn --btn-primary --btn-block'>Register</button>
-
-            
             </form>
-
             <br />
-
             <div className={styles.register}>
                 <Link to='/login'>Already have an account ? Login</Link>
             </div>
           </div>
         </Card>
-
         <div className={styles.img}>
           <img src="/images/register.png" alt="LoginImg" width='400px'/>
         </div>
-
       </section>
     </>
   )

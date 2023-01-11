@@ -6,7 +6,7 @@ import { AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai'
 import { HiOutlineMenuAlt3 } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { REMOVE_ACTIVE_USER, REMOVE_IS_ADMIN, selectIsLoggedIn, selectJWT, selectUser } from '../../redux/slices/authSlice';
+import { REMOVE_ACTIVE_USER, REMOVE_IS_ADMIN, selectIsLoggedIn, selectUser } from '../../redux/slices/authSlice';
 import { ShowOnLogin, ShowOnLogout } from '../hidden/Hidden';
 import { AdminOnlyLink } from '../adminOnly/AdminOnlyRoute';
 
@@ -41,11 +41,9 @@ const Header = () => {
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   };
-
   const hideMenu = () => {
     setShowMenu(false)
   };
-
   const logoutUser = () => {
 
     dispatch(REMOVE_ACTIVE_USER({
@@ -66,7 +64,6 @@ const Header = () => {
 
   const user = useSelector(selectUser);
   const isActive = useSelector(selectIsLoggedIn);
-  const JWT = useSelector(selectJWT);
 
   useEffect(() => {
     if(user) {
@@ -74,9 +71,6 @@ const Header = () => {
     }
   }, [user]);
 
-  console.log(user)
-  console.log(JWT)
-  console.log(isActive)
   const activeLink = (() => isActive ? `${styles.active}` : '')
 
   return (

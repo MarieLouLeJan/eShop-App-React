@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './auth.module.scss';
 import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGoogle } from 'react-icons/ai';
 import Card from '../../components/card/Card';
 import { toast } from 'react-toastify';
 import Loader from '../../components/loader/Loader';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { SET_ACTIVE_USER, SET_IS_ADMIN } from '../../redux/slices/authSlice';
+import { useLoginMutation } from '../../redux/api/authApi';
 
 const googleURL = process.env.REACT_APP_GOOGLE_URL
 
@@ -19,57 +19,56 @@ const Login = () => {
 
   const [ showPassword, setShowPassword ] = useState(false);
 
+  const [ 
+    loginUser, { 
+      data: loginData, 
+      isSuccess: isLoginSuccess, 
+      isError: isLoginError, 
+      error: loginError
+    }
+  ] = useLoginMutation()
+
+  const navigate = useNavigate();
+
   const dispatch = useDispatch()
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword)
   };
 
-
-  const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("coucou")
-
     setIsLoading(true)
-
-    const user = { email, password };
-
-    console.log("coucou")
-
-    const res = await axios.post(`${process.env.REACT_APP_API_ROOT_URL}/users/login`, user)
-    .catch(function (e) {
-      if(e.response) {
-        setIsLoading(false)
-        toast.error(e.response.data.message)
-      }
-    })
-
-    console.log(res.data)
-    console.log("coucou")
-
-    if(res) {
-      console.log(res.data.user)
-      setIsLoading(false)
-      dispatch(SET_ACTIVE_USER({
-        isLoggedIn: true,
-        user: res.data.user,
-        JWT: res.data.token
-      }))
-      if(res.data.user.roles.id === 2) {
-        dispatch(SET_IS_ADMIN({
-          isAdmin: true
-        }))
-      }
     
-      toast.success(`You're now connected`)
-      navigate('/')
+    if(email && password) {
+      await loginUser({email, password})
     }
-  } 
+  }
+
+  useEffect(() => {
+    if(isLoginSuccess){
+      setIsLoading(false)
+      dispatch(
+        SET_ACTIVE_USER({
+          isLoggedIn: true,
+          user: loginData.user,
+          JWT: loginData.token
+        })
+      )
+      if(loginData.user.roles.id === 2) {
+        SET_IS_ADMIN({
+          isAdmin: true
+        })
+      }
+      toast.success(`You're logged in`)
+      navigate('/')
+    } else if(isLoginError) {
+      setIsLoading(false)
+      toast.error(loginError.data.message)
+    } 
+  }, [isLoginError, isLoading, isLoginSuccess, loginError, loginData, dispatch, navigate])
 
   return (
-
     <>
 
       {isLoading && <Loader/>}

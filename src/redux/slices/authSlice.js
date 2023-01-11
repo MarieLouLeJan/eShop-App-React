@@ -12,7 +12,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         SET_ACTIVE_USER (state, action) {
-            // const { user, JWT } = action.payload;
+            console.log(action.payload)
             console.log(action.payload)
             state.isLoggedIn = true;
             state.user = action.payload.user;
@@ -24,10 +24,12 @@ const authSlice = createSlice({
             state.JWT = null;
         },
         SET_IS_ADMIN (state, action) {
+            console.log(action.payload)
             state.isAdmin = true
         },
         REMOVE_IS_ADMIN (state, action) {
-            state.isAdmin = true
+            console.log(action.payload)
+            state.isAdmin = false
         }
     }
 })

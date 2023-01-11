@@ -1,7 +1,8 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai'
 import './Slider.scss'
+import { useSelector } from 'react-redux';
+import { selectCategories } from '../../redux/slices/shopSlice';
 
 const Slider = () => {
 
@@ -13,23 +14,12 @@ const Slider = () => {
     let slideInterval;
     let intervalTime = 5000;
 
-    const fetchCategories = async () => {
-        const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/categories/getAllShop`)
-        .catch(function (e) {
-          if(e.response) {
-            console.log(e.response.data.message)
-          }
-        })
-        const categories = res.data.categories.filter(cat => cat.active === true)
-        categories.forEach(cat => {
-            cat.products.filter(prod => prod.isActive === true)
-        });
-        setCategories(categories)
-    }
-    
+    const cats = useSelector(selectCategories)
+
     useEffect(() => {
-        fetchCategories()
-    }, [])
+        setCategories(cats)
+    }, [cats])
+
 
     const slideLength = categories.length
 
@@ -45,21 +35,19 @@ const Slider = () => {
         setCurrentSlide(0)
     }, []);
 
-    const auto = () => {
+    function auto (){
         slideInterval = setInterval(nextSlide, intervalTime)
-    }
+    };
 
     useEffect(() => {
-        function auto (){
-            slideInterval = setInterval(nextSlide, intervalTime)
-        };
+
         if(autoScroll) {
             auto();
         }
         return () => {
             clearInterval(slideInterval)
         }
-    }, [currentSlide, autoScroll, slideInterval])
+    }, [currentSlide, autoScroll, slideInterval, auto])
 
 
   return (
