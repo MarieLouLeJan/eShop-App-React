@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useSetNewPasswordMutation } from '../../redux/api/authApi';
 import Loader from '../../components/loader/Loader';
 
@@ -11,43 +10,32 @@ const SetNewPassword = () => {
 
   const [ password, setPassword ] = useState('');
   const [ cPassword, setCPassword ] = useState('');
-  const [ isLoading, setIsLoading ] = useState(false);
 
   const params = useParams()
   const token = params.token;
 
-  const [ 
-    reset, { 
-      isSuccess: isResetSuccess, 
-      isError: isResetError, 
-      error: resetError,
-    }
-  ] = useSetNewPasswordMutation(token)
+  const [ reset, { isLoading } ] = useSetNewPasswordMutation(token)
 
   const navigate = useNavigate();
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
     if(password !== cPassword) {
       toast.error(`Passwords don't match`);
       return
     }
     await reset()
-  }
 
-  useEffect(() => {
-    if(isResetSuccess) {
-      setIsLoading(false)
+    await reset().unwrap()
+    .then((result) => {
       toast.success(`You're password had been updated, you can sign in !`)
       navigate('/login')
-    } else if (isResetError) {
-      console.log(resetError)
-      setIsLoading(false)
-      toast.error(resetError.data.message)
-    }
-  }, [isResetSuccess, resetError, isResetError, navigate])
+    })
+    .catch((err) => {
+      toast.error('Something went wrong, please try again later')
+    })
+  }
 
 
   return (

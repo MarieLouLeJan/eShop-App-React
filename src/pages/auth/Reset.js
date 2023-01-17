@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useResetPasswordMutation } from '../../redux/api/authApi';
 import Loader from '../../components/loader/Loader';
 
@@ -11,35 +10,24 @@ import Loader from '../../components/loader/Loader';
 const Reset = () => {
 
   const [ email, setEmail ] = useState('');
-  const [ isLoading, setIsLoading ] = useState(false);
 
-  const [ 
-    reset, { 
-      isSuccess: isResetSuccess, 
-      isError: isResetError, 
-      error: resetError,
-    }
-  ] = useResetPasswordMutation()
+  const [ reset, { isLoading }] = useResetPasswordMutation()
 
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-    await reset({ email })
+
+    await reset({ email }).unwrap()
+    .then((result) => {
+      toast.success(`An email had been sent`)
+      navigate('/')
+    })
+    .catch((err) => {
+      toast.error('Something went wrong, please try again later')
+    })
   }
 
-  useEffect(() => {
-    if(isResetSuccess) {
-      setIsLoading(false)
-      toast.success('An email had been sent')
-      navigate('/login')
-    } else if (isResetError) {
-      console.log(resetError)
-      setIsLoading(false)
-      toast.error(resetError.data.message)
-    }
-  }, [isResetSuccess, resetError, isResetError, navigate])
   
   return (
 

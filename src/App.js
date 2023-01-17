@@ -6,15 +6,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AuthGoogle from "./pages/auth/AuthGoogle";
 import {AdminOnlyRoute} from "./components/adminOnly/AdminOnlyRoute";
-// import { selectJWT } from './redux/slices/authSlice' 
-// import { useSelector } from 'react-redux';
-// import { setAuthToken } from "./services/setAuthToken";
-
+import ProductDetails from "./components/product/productDetails/ProductDetails";
 
 function App() {
-
-  // const JWT = useSelector(selectJWT);
-  // if (JWT) setAuthToken(JWT)
 
   return (
     <>
@@ -39,6 +33,8 @@ function App() {
           <Route path="/authGoogle" element={<AuthGoogle/>}/>
 
           <Route path='/admin/*' element={<AdminOnlyRoute> <Admin/> </AdminOnlyRoute>}></Route>
+
+          <Route path="/product-details/:param" element={<ProductDetails/>}/>
 
         </Routes>
 

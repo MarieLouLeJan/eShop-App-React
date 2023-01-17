@@ -1,14 +1,10 @@
-import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './AddProduct.module.scss';
 import Card from '../../card/Card';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, shallowEqual } from 'react-redux';
-import { selectCategories, selectTva, selectProducts } from '../../../redux/slices/adminSlice';
-import { useAddProductMutation, useUpdateProductMutation } from '../../../redux/api/adminApi';
+import { useAddProductMutation, useGetCategoriesAdminQuery, useUpdateProductPutMutation, useGetTvaAdminQuery, useGetOneProductAdminQuery } from '../../../redux/api/shopApi';
 import Loader from '../../../components/loader/Loader';
-
 
 const initialState = {
   ref: '',
@@ -27,9 +23,8 @@ const AddProduct = () => {
 
   const navigate = useNavigate()
 
-  const [ isLoading, setIsLoading ] = useState(false);
-  const products =  (useSelector(selectProducts, shallowEqual))
-  const productEdit = products.find(prod => prod.id === parseInt(param))
+  const [ categories, setCategories ] = useState([]);
+  const [ TVA, setTVA ] = useState([]);
 
   const detectForm = (id, f1, f2) => {
     if(param === 'ADD') {
@@ -38,16 +33,21 @@ const AddProduct = () => {
     return f2
   }
 
-  const [ product, setProduct ] = useState(() => {
-    const newState = detectForm(param,
-      {...initialState},
-      productEdit
-      )
-      return newState
-  })
+  const { data: tvaData } = useGetTvaAdminQuery();
 
-  const TVA = useSelector(selectTva)
-  const categories = useSelector(selectCategories)
+  const { data: catData } = useGetCategoriesAdminQuery();
+
+  const { data: prodOneData, isSuccess: prodOneIsSuccess } = useGetOneProductAdminQuery(parseInt(param));
+
+  const [ product, setProduct ] = useState(initialState)
+
+  useEffect(() => {
+    if(catData) setCategories(catData.data);    
+    if(tvaData) setTVA(tvaData.data);
+    if(prodOneIsSuccess) {
+      setProduct(prodOneData.data)
+    }
+  }, [catData, tvaData, param, prodOneIsSuccess, prodOneData]);
 
   const handleInputChange = (e) => {
     const { name, type, value } = e.target;
@@ -67,48 +67,37 @@ const AddProduct = () => {
     })
   }
 
-  const [ 
-    addProduct, { 
-      data: addData, 
-      isSuccess: isAddSucces, 
-      isError: isAddError, 
-      error: addError
-    }
-  ] = useAddProductMutation()
+  const [ updateProduct, { isLoading: isUpdateLoading} ] = useUpdateProductPutMutation()
 
-  const [ 
-    updateProduct, { 
-      data: updateData, 
-      isSuccess: isUpdateSucces, 
-      isError: isUpdateError, 
-      error: updateError
-    }
-  ] = useUpdateProductMutation()
+  const [ addProduct, { isLoading: isAddLoading} ] = useAddProductMutation()
 
 
   const handleAdd = async (e) => {
     e.preventDefault()
     await addProduct(product)
-    if(isAddSucces) {
-      toast.success(`${addData.data.title} has been created !`)
+    .unwrap()
+    .then((result) => {
+      toast.success(`${result.data.title} has been created !`)
       navigate('/admin/allProducts')
-    } else if (isAddError) {
-      console.log(addError)
-    }
-  }
+    })
+    .catch((err) => {
+      toast.error(err.data.message)
+    })
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault()
     const { id, created_at, categories, product_reviews, tva, ...productToEdit } = product 
     const P = parseInt(param)
     const myObject = {body: productToEdit, id: P}
-    await updateProduct(myObject)
-    if(isUpdateSucces) {
-      toast.success(`${updateData.data.title} has been updated !`)
+    await updateProduct(myObject).unwrap()
+    .then((result) => {
+      toast.success(`${result.data.title} has been updated !`)
       navigate('/admin/allProducts')
-    } else if (isUpdateError) {
-      console.log(updateError)
-    }
+    })
+    .catch((err) => {
+      toast.error(err.data.message)
+    })
   }
 
 
@@ -117,7 +106,7 @@ const AddProduct = () => {
 
     <>
 
-      {isLoading && <Loader/>}
+      {(isUpdateLoading || isAddLoading) && <Loader/>}
       
       <div className={styles.product}>
 
@@ -131,8 +120,8 @@ const AddProduct = () => {
               type="text" 
               placeholder='123ABC0000'
               required
-              name='ref'
-              value={product.ref}
+              name='reference'
+              value={product.reference}
               onChange={(e) => handleInputChange(e)}/>
 
             <label>Product title :</label>

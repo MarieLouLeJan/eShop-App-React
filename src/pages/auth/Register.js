@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,48 +9,33 @@ import { useRegisterMutation } from '../../redux/api/authApi';
 
 const Register = () => {
 
+  const navigate = useNavigate()
+
   const [ firstname, setFirstname ] = useState('');
   const [ lastname, setLastname ] = useState('');
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ cPassword, setCPassword ] = useState('');
 
-  const [ isLoading, setIsLoading ] = useState(false);
-
-  const [ 
-    registerUser, { 
-      isSuccess: isRegisterSucces, 
-      isError: isRegisterError, 
-      error: registerError
-    }
-  ] = useRegisterMutation()
-
-  const navigate = useNavigate()
+  const [ registerUser, { isLoading } ] = useRegisterMutation()
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-
     if(password !== cPassword) {
-      setIsLoading(false)
       toast.error(`Passwords don't match`);
       return
     }
-    const newUser = { firstname, lastname, email, password, role_id: 1};
+    const newUser = { firstname, lastname, email, password, role_id: 2};
 
-    await registerUser(newUser)
+    await registerUser(newUser).unwrap()
+    .then((result) => {
+      toast.success(`${result.user.firstname}, your account has been created`)
+      navigate('/')
+    })
+    .catch((err) => {
+      toast.error('Something went wrong, please try again later')
+    })
   }
-
-  useEffect(() => {
-    if(isRegisterError) {
-      setIsLoading(false)
-      toast.success('Your account had been created')
-      navigate('/login')
-    } else if (isRegisterError) {
-      setIsLoading(false)
-      toast.error(registerError.data.message)
-    }
-  }, [registerError, isRegisterSucces, navigate, isRegisterError])
 
   return (
     <>

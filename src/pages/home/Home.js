@@ -1,37 +1,36 @@
-import { useDispatch } from 'react-redux';
-import { STORE_CATEGORIES } from '../../redux/slices/shopSlice';
+import { useEffect, useRef } from 'react'
 import Product from '../../components/product/Product'
-import { useGetCategoriesQuery } from '../../redux/api/shopApi';
-
-// import Slider from '../../components/slider/Slider'
+import Slider from '../../components/slider/Slider'
 
 
 const Home = () => {
+  
+  const url = window.location.href
 
-  const dispatch = useDispatch();
+  const myRef = useRef(null)
+  const executeScroll = () => {
 
-  const {
-    data,
-    isSuccess,
-    isError,
-    error
-  } = useGetCategoriesQuery();
-
-  if (isSuccess) {
-    dispatch(
-      STORE_CATEGORIES({
-        categories: data.data
-      })
-    )
-  } else if (isError) {
-    console.log(error)
+    const elem = document.getElementById('product-section');
+    if (url.includes('#products')) {
+      elem.scrollIntoView({
+      behavior: 'smooth',
+    })
+    } 
   }
 
-  
+  useEffect(() => {
+    executeScroll()
+  }, [])
+
+
+
   return (
     <div>
-      {/* <Slider/> */}
-      <Product/>
+      <Slider/>
+      <div id='product-section'>
+        <Product />
+      </div>
+
     </div>
   )
 }

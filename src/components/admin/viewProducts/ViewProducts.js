@@ -1,28 +1,46 @@
-import axios from 'axios';
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './ViewProducts.module.scss';
 import { Link } from 'react-router-dom';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'
+import { FaEdit } from 'react-icons/fa'
+import { TbTrash, TbTrashOff } from 'react-icons/tb'
 import Loader from '../../loader/Loader'
 import Notiflix from 'notiflix';
-import { useSelector } from 'react-redux';
-import { selectCategories } from '../../../redux/slices/adminSlice';
+import { useGetCategoriesAdminQuery, useUpdateProductPatchMutation,  } from '../../../redux/api/shopApi';
+
 
 const ViewProducts = () => {
 
-  const [ isLoading, ] = useState(false)
+  const [ categories, setCategories ] = useState([]) 
+
+  const {
+    data: catData,
+    isSuccess: isCatSuccess,
+    isError: isCatError,
+    error: catError,
+    isLoading: isCatLoading
+  } = useGetCategoriesAdminQuery();
 
 
-  const confirmDelete = async (id) => {
+  const [ 
+    updateProduct, { 
+      data: updateData, 
+      isSuccess: isUpdateSucces, 
+      isError: isUpdateError, 
+      error: updateError,
+      isLoading: isProdLoading
+    }
+  ] = useUpdateProductPatchMutation();
+
+
+  const confirmUnactive = async (id) => {
     Notiflix.Confirm.show(
       'Warning',
-      `You're about to unactive this product`,
+      `You're about to unactive this product, it won't be on the store anymore`,
       'Unactive',
       'Cancel',
       function okCb() {
-        deleteProduct(id)
-        toast.success('The product is not active anymore')
+        unactive(id)
       },
       function cancelCb() {
         toast.success('Changed your mind ? :)')
@@ -37,25 +55,67 @@ const ViewProducts = () => {
     );
   }
 
-  const deleteProduct = async (id) => {
-    // We don't delete completely the product, as we still need it for the past orders. What we do here is turning the 'active' to false, then it doesn't appear on the shop
-    const productUnactive = { 'active': 'false'}
-    const res = await axios.patch(`${process.env.REACT_APP_API_ROOT_URL}/products/updateOnePatch/${id}`, productUnactive)
-    .catch(function (e) {
-      if(e.response) {
-      }
-    })
-    console.log(res)
+  const confirmActive = async (id) => {
+    Notiflix.Confirm.show(
+      'Warning',
+      `You're about to active this product, it will appear on the store`,
+      'Active',
+      'Cancel',
+      function okCb() {
+        active(id)
+      },
+      function cancelCb() {
+        toast.success('Changed your mind ? :)')
+      },
+      {
+        width: '320px',
+        borderRadius: '8px',
+        titleColor: 'red',
+        okButtonBackground: 'green',
+        cssAnimationStyle: 'fade'
+      },
+    );
   }
 
+  const unactive = async (id) => {
+    // We don't want to delete completely the product, as we still need it for the past orders. What we do here is turning the 'active' to false, then it doesn't appear on the shop
+    const unactive = { 'active': 'false'}
 
-  const categories = useSelector(selectCategories);
+    await updateProduct({body: unactive, id})
+
+    if(isUpdateSucces) {
+      toast.success(`${updateData.data.title} is now unactive !`)
+    } else if (isUpdateError) {
+      console.log(updateError)
+    }
+  }
+
+  const active = async (id) => {
+    const active = { 'active': 'true'}
+
+    await updateProduct({body: active, id})
+
+    if(isUpdateSucces) {
+      toast.success(`${updateData.data.title} is now unactive !`)
+    } else if (isUpdateError) {
+      console.log(updateError)
+    }
+  }
+
+  useEffect(() => {
+    if(isCatSuccess) {
+      // catData.data.map(cat => cat.products.sort((a, b) => b.active - a.active))
+      setCategories(catData.data)
+    } else if (isCatError) {
+      console.log(catError)
+    }
+  }, [catData, catError, isCatError, isCatSuccess])
 
 
   return (
     <>
 
-    {isLoading && <Loader/>}
+    {(isCatLoading || isProdLoading) && <Loader/>}
 
     <div className={styles.table}>
 
@@ -113,7 +173,9 @@ const ViewProducts = () => {
                             <FaEdit size={20} color='#1f93ff'/>
                           </Link>
                           &nbsp;
-                          <FaTrashAlt size={20} color='red' onClick={() => confirmDelete(id)}/>
+                          {active 
+                            ? <TbTrash size={20} color='red' onClick={() => confirmUnactive(id)}/> 
+                            : <TbTrashOff size={20} color='green' onClick={() => confirmActive(id)}/> }
                         </td>
                       </tr>
                     </tbody>

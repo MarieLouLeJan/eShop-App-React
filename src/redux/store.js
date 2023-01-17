@@ -7,7 +7,6 @@ import thunk from 'redux-thunk';
 import storage from 'redux-persist/lib/storage';
 import { shopApi } from './api/shopApi';
 import { authApi } from './api/authApi';
-import { adminApi } from './api/adminApi';
 
 const persistConfig = {
     key: 'root',
@@ -20,7 +19,6 @@ const rootReducer = combineReducers({
     shop: shopReducer,
     [authApi.reducerPath]: authApi.reducer,
     [shopApi.reducerPath]: shopApi.reducer, 
-    [adminApi.reducerPath]: adminApi.reducer, 
   })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -31,10 +29,8 @@ export const store = configureStore({
         const allMiddleware = [
           authApi.middleware,
           shopApi.middleware,
-          adminApi.middleware,
           thunk
         ];
-        // serializableCheck: false;
         return getDefaultMiddleware({serializableCheck: false}).concat(...allMiddleware);
       },
 });

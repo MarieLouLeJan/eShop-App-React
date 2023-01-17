@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai'
 import './Slider.scss'
-import { useSelector } from 'react-redux';
-import { selectCategories } from '../../redux/slices/shopSlice';
+import { useGetCategoriesShopQuery } from '../../redux/api/shopApi';
 
 const Slider = () => {
 
@@ -14,11 +13,20 @@ const Slider = () => {
     let slideInterval;
     let intervalTime = 5000;
 
-    const cats = useSelector(selectCategories)
+    const {
+        data,
+        isSuccess,
+        isError,
+        error
+      } = useGetCategoriesShopQuery();
 
     useEffect(() => {
-        setCategories(cats)
-    }, [cats])
+        if (isSuccess) {
+            setCategories(data.data)
+          } else if (isError) {
+            console.log(error)
+          }
+    }, [data, isError, isSuccess, error])
 
 
     const slideLength = categories.length
@@ -40,7 +48,6 @@ const Slider = () => {
     };
 
     useEffect(() => {
-
         if(autoScroll) {
             auto();
         }
