@@ -1,32 +1,30 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import Product from '../../components/product/Product'
-import Slider from '../../components/slider/Slider'
+// import Slider from '../../components/slider/Slider'
 
 
 const Home = () => {
   
-  const url = window.location.href
-
-  const myRef = useRef(null)
-  const executeScroll = () => {
-
-    const elem = document.getElementById('product-section');
-    if (url.includes('#products')) {
-      elem.scrollIntoView({
-      behavior: 'smooth',
-    })
-    } 
-  }
-
   useEffect(() => {
+    const url = window.location.href
+
+    const executeScroll = () => {
+  
+      const elem = document.getElementById('product-section');
+      if (url.includes('#products')) {
+        elem.scrollIntoView({
+        behavior: 'smooth',
+      })
+      } 
+    }
     executeScroll()
   }, [])
 
 
-
   return (
     <div>
-      <Slider/>
+      {/* <Slider/> */}
+
       <div id='product-section'>
         <Product />
       </div>

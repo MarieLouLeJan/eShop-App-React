@@ -7,7 +7,7 @@ import { useAddProductMutation, useGetCategoriesAdminQuery, useUpdateProductPutM
 import Loader from '../../../components/loader/Loader';
 
 const initialState = {
-  ref: '',
+  reference: '',
   title: '',
   description: '',
   image: '',
@@ -25,6 +25,8 @@ const AddProduct = () => {
 
   const [ categories, setCategories ] = useState([]);
   const [ TVA, setTVA ] = useState([]);
+  const [ product, setProduct ] = useState(initialState)
+
 
   const detectForm = (id, f1, f2) => {
     if(param === 'ADD') {
@@ -39,7 +41,6 @@ const AddProduct = () => {
 
   const { data: prodOneData, isSuccess: prodOneIsSuccess } = useGetOneProductAdminQuery(parseInt(param));
 
-  const [ product, setProduct ] = useState(initialState)
 
   useEffect(() => {
     if(catData) setCategories(catData.data);    
@@ -74,6 +75,7 @@ const AddProduct = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault()
+    console.log(product)
     await addProduct(product)
     .unwrap()
     .then((result) => {

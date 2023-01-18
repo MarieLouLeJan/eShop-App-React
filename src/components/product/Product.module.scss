@@ -4,7 +4,6 @@
   
     .filter {
       width: 20%;
-      // border: 2px solid var(--dark-blue);
       transition: all 0.3s;
     }
   
@@ -30,7 +29,7 @@
       .filter {
         width: 50%;
         background-color: #fff;
-        border: 2px solid var(--dark-blue);
+        border: 2px solid var(--color-blue);
         position: absolute;
         left: -200%;
         height: 100%;

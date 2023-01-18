@@ -12,19 +12,23 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         SET_ACTIVE_USER (state, action) {
+            console.log(action.payload)
             state.isLoggedIn = true;
             state.user = action.payload.user;
             state.JWT = action.payload.JWT;
         },
         REMOVE_ACTIVE_USER (state, action) {
+            console.log(action.payload)
             state.isLoggedIn = false;
             state.user = null;
             state.JWT = null;
         },
         SET_IS_ADMIN (state, action) {
+            console.log(action.payload)
             state.isAdmin = true
         },
         REMOVE_IS_ADMIN (state, action) {
+            console.log(action.payload)
             state.isAdmin = false
         }
     }

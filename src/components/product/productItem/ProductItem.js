@@ -1,15 +1,9 @@
-import Product from '../Product'
 import styles from './ProductItem.module.scss'
 import Card from '../../card/Card'
 import { Link } from 'react-router-dom'
+import setTTC from '../../../services/setTTCPrice'
 
 const ProductItem = ({product, grid, id, title, priceHT, image, tva, description}) => {
-
-    const priceTTC = (HT, TVA) => {
-        HT = parseFloat(HT)
-        let totalTTC = (HT * TVA) + HT;
-        return totalTTC.toFixed(2);
-    }
 
     const shortenText = (text, n) => {
       if (text.length > n ) {
@@ -30,7 +24,7 @@ const ProductItem = ({product, grid, id, title, priceHT, image, tva, description
       
       <div className={styles.content}>
         <div className={styles.details}>
-            <p>{`€${priceTTC(priceHT, tva.value)}`}</p>
+            <p>{`€${setTTC(priceHT, tva.value)}`}</p>
             <h4>{shortenText(title, 15)}</h4>
         </div>
 

@@ -37,6 +37,7 @@ const Login = () => {
 
     await loginUser({email, password}).unwrap()
     .then((result) => {
+      console.log(result)
       dispatch(
         SET_ACTIVE_USER({
           isLoggedIn: true,
@@ -51,7 +52,6 @@ const Login = () => {
       }
       toast.success(`You're logged in`)
       navigate('/')
-      console.log(result)
     })
     .catch((err) => {
       toast.error('Something went wrong, please try again later')

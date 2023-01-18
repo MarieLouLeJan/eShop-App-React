@@ -14,7 +14,7 @@ function AuthGoogle() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const handleLogIn = async () => {
+      const handleLogIn = async () => {
         const res = await axios.get(`${process.env.REACT_APP_API_ROOT_URL}/auth/me`, {
             withCredentials: true,
         })
@@ -36,7 +36,7 @@ function AuthGoogle() {
                   }))
                 }
               
-                toast.success(`You're now connected`)
+                toast.success(`You're logged in`)
                 navigate('/')
               }
         }

@@ -3,10 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     categories: [],
-    products: []
+    products: [],
+    tva: []
 }
 
-const adminSlice = createSlice ({
+const shopSlice = createSlice ({
     name: "shop",
     initialState,
     reducers: {
@@ -14,16 +15,16 @@ const adminSlice = createSlice ({
             state.categories = action.payload.categories
         },
         STORE_PRODUCTS(state, action) {
-            state.products = action.payload.products
+            state.products = action.payload.prods
         },
     }
 })
 
 
-export const { STORE_CATEGORIES, STORE_PRODUCTS } = adminSlice.actions
+export const { STORE_CATEGORIES, STORE_PRODUCTS } = shopSlice.actions
 
-export const selectCategories = (state) => state.admin.categories
+export const selectCategories = (state) => state.shop.categories
 
-export const selectProducts = (state) => state.admin.products
+export const selectProducts = (state) => state.shop.products
 
-export default adminSlice.reducer
+export default shopSlice.reducer

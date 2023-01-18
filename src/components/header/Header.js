@@ -41,23 +41,21 @@ const Header = () => {
   const toggleMenu = () => {
     setShowMenu(!showMenu)
   };
+
   const hideMenu = () => {
     setShowMenu(false)
   };
-  const logoutUser = () => {
 
+  const logoutUser = () => {
     dispatch(REMOVE_ACTIVE_USER({
       isLoggedIn: false,
       user: null,
       JWT: null,
     }))
-
     dispatch(REMOVE_IS_ADMIN({
       isAdmin: false
     }))
-
     setDisplayName('')
-
     toast.success(`You're now logged out`);
     navigate('/')
   }

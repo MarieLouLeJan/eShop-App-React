@@ -6,7 +6,9 @@ export const shopApi = createApi({
         baseUrl: process.env.REACT_APP_API_ROOT_URL,
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.JWT
+            console.log(token)
             if (token) {
+                console.log(token)
               headers.set('authorization', `Bearer ${token}`)  
               return headers
             }
