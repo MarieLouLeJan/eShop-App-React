@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import Loader from '../../components/loader/Loader';
 import { toast } from 'react-toastify';
 import { useRegisterMutation } from '../../redux/api/authApi';
+import { useDispatch } from 'react-redux';
+import { SAVE_URL } from '../../redux/slices/cartSlice';
 
 
 const Register = () => {
+
+  const dispatch = useDispatch()
+  useEffect(() => {dispatch(SAVE_URL(""))}, [dispatch]);
 
   const navigate = useNavigate()
 

@@ -1,0 +1,50 @@
+.checkout {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .card {
+      width: 100%;
+      max-width: 500px;
+      padding: 1rem;
+      margin-left: auto;
+      margin-right: auto;
+      h3 {
+        font-weight: 300;
+      }
+    }
+    
+    .adresses {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+        .adress {
+          display: flex;
+          justify-content: space-around;
+          .trash {
+            margin-top: 2rem;
+          }
+          .label {
+            width: 50%;
+          }
+        }
+        p {
+          font-size: 1.2rem;
+        }
+    }
+
+    .btn {
+      width: 50%;
+      margin: auto;
+    }
+}
+
+  
+  @media screen and (max-width: 700px) {
+    .checkout {
+      flex-direction: column;
+    }
+  }

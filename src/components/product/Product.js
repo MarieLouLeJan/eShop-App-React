@@ -32,13 +32,10 @@ const Product = () => {
     isLoading: isProdLoading
   } = useGetProductsShopQuery();
 
-  console.log(useGetProductsShopQuery())
-
   
   useEffect(() => {
     if(isCatSuccess) {
       setCategories(catData.data)
-
     } else if (isCatError) {
       toast.error('Something went wrong')
       console.log(catError)

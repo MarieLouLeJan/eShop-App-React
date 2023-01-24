@@ -6,9 +6,7 @@ export const shopApi = createApi({
         baseUrl: process.env.REACT_APP_API_ROOT_URL,
         prepareHeaders: (headers, { getState }) => {
             const token = getState().auth.JWT
-            console.log(token)
             if (token) {
-                console.log(token)
               headers.set('authorization', `Bearer ${token}`)  
               return headers
             }
@@ -46,7 +44,6 @@ export const shopApi = createApi({
             query: (id) => `/products/getOneShop/${id}`,
             providesTags: ['Product']
         }),
-
         addProduct: builder.mutation({
             query: (body) => ({
                 url: '/products/createOne',
@@ -71,6 +68,19 @@ export const shopApi = createApi({
             }),
             invalidatesTags: ['Categories', 'Products', 'Product'],
         }),
+        createProductReview: builder.mutation({
+            query: (body) => ({
+                url: `/productReview/createOne`,
+                method: 'post',
+                body,
+            }),
+            invalidatesTags: ['Categories', 'Products', 'Product'],
+        }),
+        getReviewByProduct: builder.query({
+            query: (id) => `/productReview/getByProduct/${id}`,
+            providesTags: ['Product']
+        }),
+
     })
 })
 
@@ -84,5 +94,7 @@ export const {
     useGetOneProductAdminQuery,
     useGetCategoriesShopQuery,
     useGetProductsShopQuery,
-    useGetOneProductShopQuery
+    useGetOneProductShopQuery,
+    useCreateProductReviewMutation,
+    useGetReviewByProductQuery,
 } = shopApi

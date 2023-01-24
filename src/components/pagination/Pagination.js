@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './Pagination.module.scss'
 
 const Pagination = ({ currentPage, setCurrentPage, productsPerPage, totalProducts}) => {
@@ -27,24 +26,22 @@ const Pagination = ({ currentPage, setCurrentPage, productsPerPage, totalProduct
   }
 
   return (
-    <ul className={styles.pagination}>
-
-
+    <ul className={pageNumbers.length === 0 ? `${styles.hidden}` : `${styles.pagination}`}>
       
-      <li onClick={paginatePrev} className={currentPage === 1 && `${styles.hidden}`}>Prev</li>
+      <li onClick={paginatePrev} className={currentPage === 1 ? `${styles.hidden}`: null}>Prev</li>
 
       {pageNumbers.map(p => {
-        if(p >= currentPage - 1 && p <= currentPage + 1 ){
+        if(p >= currentPage - 1 && p <= currentPage + 1){
           return (
             <li key={p} 
                 onClick={() => paginate(p)}
-                className={currentPage === p && `${styles.active}`}
+                className={currentPage === p ? `${styles.active}` : null}
                 >{p}</li>)
           }
           return null
       })}
 
-      <li onClick={paginateNext} className={currentPage === pageNumbers.length && `${styles.hidden}`}>Next</li>
+      <li onClick={paginateNext} className={currentPage === pageNumbers.length + 1 ? `${styles.hidden}` : null}>Next</li>
 
       <p>
         <b className={styles.page}>{`Page ${currentPage}`}</b>

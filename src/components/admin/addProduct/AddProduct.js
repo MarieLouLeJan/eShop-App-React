@@ -72,7 +72,6 @@ const AddProduct = () => {
 
   const [ addProduct, { isLoading: isAddLoading} ] = useAddProductMutation()
 
-
   const handleAdd = async (e) => {
     e.preventDefault()
     console.log(product)

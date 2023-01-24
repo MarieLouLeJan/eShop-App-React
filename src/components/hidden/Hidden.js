@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { selectIsLoggedIn, selectJWT, selectUser } from '../../redux/slices/authSlice';
+import { selectIsLoggedIn } from '../../redux/slices/authSlice';
 
 
 export const ShowOnLogin = ({ children }) => {

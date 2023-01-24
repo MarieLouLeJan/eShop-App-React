@@ -22,15 +22,7 @@ const ViewProducts = () => {
   } = useGetCategoriesAdminQuery();
 
 
-  const [ 
-    updateProduct, { 
-      data: updateData, 
-      isSuccess: isUpdateSucces, 
-      isError: isUpdateError, 
-      error: updateError,
-      isLoading: isProdLoading
-    }
-  ] = useUpdateProductPatchMutation();
+  const [ updateProduct, { isProdLoading } ] = useUpdateProductPatchMutation();
 
 
   const confirmUnactive = async (id) => {
@@ -79,27 +71,29 @@ const ViewProducts = () => {
 
   const unactive = async (id) => {
     // We don't want to delete completely the product, as we still need it for the past orders. What we do here is turning the 'active' to false, then it doesn't appear on the shop
-    const unactive = { 'active': 'false'}
+    const myBody = {body: { active: 'false'}, id }
 
-    await updateProduct({body: unactive, id})
-
-    if(isUpdateSucces) {
-      toast.success(`${updateData.data.title} is now unactive !`)
-    } else if (isUpdateError) {
-      console.log(updateError)
-    }
+    await updateProduct(myBody).unwrap()
+    .then((result) => {
+      toast.success(`${result.data.title} is now unactive !`)
+    })
+    .catch((err) => {
+        console.log(err.data.message)
+        toast.error('Sorry something went wrong')
+    })
   }
 
   const active = async (id) => {
-    const active = { 'active': 'true'}
+    const myBody = {body: { active: 'true'}, id }
 
-    await updateProduct({body: active, id})
-
-    if(isUpdateSucces) {
-      toast.success(`${updateData.data.title} is now unactive !`)
-    } else if (isUpdateError) {
-      console.log(updateError)
-    }
+    await updateProduct(myBody).unwrap()
+    .then((result) => {
+      toast.success(`${result.data.title} is now unactive !`)
+    })
+    .catch((err) => {
+        console.log(err.data.message)
+        toast.error('Sorry something went wrong')
+    })
   }
 
   useEffect(() => {
@@ -107,7 +101,7 @@ const ViewProducts = () => {
       // catData.data.map(cat => cat.products.sort((a, b) => b.active - a.active))
       setCategories(catData.data)
     } else if (isCatError) {
-      console.log(catError)
+      console.log(catError.data.message)
     }
   }, [catData, catError, isCatError, isCatSuccess])
 

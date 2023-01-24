@@ -1,15 +1,18 @@
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Product from '../../components/product/Product'
-// import Slider from '../../components/slider/Slider'
+import { SAVE_URL } from '../../redux/slices/cartSlice'
+import Slider from '../../components/slider/Slider'
 
 
 const Home = () => {
   
+  const dispatch = useDispatch()
+  useEffect(() => {dispatch(SAVE_URL(""))}, [dispatch]);
+
   useEffect(() => {
     const url = window.location.href
-
     const executeScroll = () => {
-  
       const elem = document.getElementById('product-section');
       if (url.includes('#products')) {
         elem.scrollIntoView({
@@ -23,7 +26,7 @@ const Home = () => {
 
   return (
     <div>
-      {/* <Slider/> */}
+      <Slider/>
 
       <div id='product-section'>
         <Product />

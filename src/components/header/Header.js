@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styles from './Header.module.scss';
 import { FaTimes } from 'react-icons/fa';
 import { AiOutlineShoppingCart, AiOutlineUser } from 'react-icons/ai'
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { REMOVE_ACTIVE_USER, REMOVE_IS_ADMIN, selectIsLoggedIn, selectUser } from '../../redux/slices/authSlice';
 import { ShowOnLogin, ShowOnLogout } from '../hidden/Hidden';
 import { AdminOnlyLink } from '../adminOnly/AdminOnlyRoute';
+import { selectCartItem } from '../../redux/slices/cartSlice';
+
 
 
 const logo = (        
@@ -19,24 +21,34 @@ const logo = (
   </div>
 );
 
-const cart = (
-  <span className={styles.cart}>
-    <Link to='/cart'>
-      <AiOutlineShoppingCart size={18}/>
-      <p>0</p>
-    </Link>
-  </span>
-);
+
 
 
 const Header = () => {
 
   const [ displayName, setDisplayName ] = useState('')
   const [ showMenu, setShowMenu ] = useState(false);
+  const [ scrollPage, setScrollPage ] = useState(false)
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const cartItem = useSelector(selectCartItem)
+  const cartQuantity = cartItem.quantity
+
+  const cart = (
+    <span className={styles.cart}>
+      <Link to='/cart'>
+        <AiOutlineShoppingCart size={18}/>
+        <p>{cartQuantity}</p>
+      </Link>
+    </span>
+  );
+
+  const fixNavBar = () => {
+    if(window.scrollY > 40) setScrollPage(true)
+    else setScrollPage(false)
+  }
+  window.addEventListener('scroll', fixNavBar)
 
   const toggleMenu = () => {
     setShowMenu(!showMenu)
@@ -57,7 +69,6 @@ const Header = () => {
     }))
     setDisplayName('')
     toast.success(`You're now logged out`);
-    navigate('/')
   }
 
   const user = useSelector(selectUser);
@@ -72,7 +83,7 @@ const Header = () => {
   const activeLink = (() => isActive ? `${styles.active}` : '')
 
   return (
-    <header>
+    <header className={scrollPage ? `${styles.fixed}` : null}>
 
       <div className={styles.header}>
         { logo }
@@ -83,9 +94,7 @@ const Header = () => {
               ? `${styles['nav-wrapper']} ${styles['show-nav-wrapper']}` 
               : `${styles['nav-wrapper']}`
             }
-            onClick={hideMenu}>
-            
-          </div>
+            onClick={hideMenu}></div>
             
             <ul onClick={hideMenu}>
               <li className={styles['logo-mobile']}>{logo} <FaTimes size={22} color='#fff' onClick={hideMenu}/></li>
@@ -96,14 +105,14 @@ const Header = () => {
                     <button className='--btn --btn-primary' >Admin</button>
                   </Link>
                 </AdminOnlyLink>
-
               </li>
 
               <li>
                 <NavLink to='/' className={activeLink}>Home</NavLink>
               </li>
+
               <li>
-                <NavLink to='/contactUs' className={activeLink}>Contact Us</NavLink>
+                <NavLink to='/contact-us' className={activeLink}>Contact Us</NavLink>
               </li>
             </ul>
 

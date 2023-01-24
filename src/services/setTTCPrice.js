@@ -6,4 +6,10 @@ const setTTCPrice = (HT, TVA) => {
     return TTC.toFixed(2)
 }
 
+export const setTTCFilter = (HT, TVA) => {
+    HT = parseFloat(HT)
+    let totalTTC = (HT * TVA) + HT;
+    return parseFloat(totalTTC)
+}
+
 export default setTTCPrice

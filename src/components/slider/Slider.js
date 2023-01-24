@@ -43,18 +43,16 @@ const Slider = () => {
         setCurrentSlide(0)
     }, []);
 
-    function auto (){
-        slideInterval = setInterval(nextSlide, intervalTime)
-    };
 
     useEffect(() => {
-        if(autoScroll) {
-            auto();
+        if (autoScroll) {
+          const auto = () => {
+            slideInterval = setInterval(nextSlide, intervalTime);
+          };
+          auto();
         }
-        return () => {
-            clearInterval(slideInterval)
-        }
-    }, [currentSlide, autoScroll, slideInterval, auto])
+        return () => clearInterval(slideInterval);
+      }, [currentSlide, slideInterval, autoScroll]);
 
 
   return (

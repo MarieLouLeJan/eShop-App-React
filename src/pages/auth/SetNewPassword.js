@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSetNewPasswordMutation } from '../../redux/api/authApi';
 import Loader from '../../components/loader/Loader';
+import { useDispatch } from 'react-redux';
+import { SAVE_URL } from '../../redux/slices/cartSlice';
 
 const SetNewPassword = () => {
+
+  const dispatch = useDispatch()
+  useEffect(() => {dispatch(SAVE_URL(""))}, [dispatch]);
 
   const [ password, setPassword ] = useState('');
   const [ cPassword, setCPassword ] = useState('');

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import setTTC from '../../services/setTTCPrice'
+import { setTTCFilter } from '../../services/setTTCPrice'
 
 const initialState = {
     filteredProducts: [],
@@ -34,12 +34,12 @@ const filterSlice = createSlice({
                     break
                 case 'lowest-price':
                     tempProducts = products.slice().sort((a, b) => {
-                        return setTTC(a.priceHT, a.tva.value) - setTTC(b.priceHT, b.tva.value) 
+                        return setTTCFilter(a.priceHT, a.tva.value) - setTTCFilter(b.priceHT, b.tva.value) 
                     })
                     break
                 case 'highest-price':
                     tempProducts = products.slice().sort((a, b) => {
-                        return setTTC(b.priceHT, b.tva.value) - setTTC(a.priceHT, a.tva.value) 
+                        return setTTCFilter(b.priceHT, b.tva.value) - setTTCFilter(a.priceHT, a.tva.value) 
                     })
                     break
                 case 'a-z':
@@ -71,7 +71,7 @@ const filterSlice = createSlice({
             const { products } = action.payload;
             const myArray = [];
             products.map(prod => {
-                const price = setTTC(prod.priceHT, prod.tva.value)
+                const price = setTTCFilter(prod.priceHT, prod.tva.value)
                 return myArray.push(price)
             })
             state.minPrice = Math.min(...myArray)
@@ -79,7 +79,7 @@ const filterSlice = createSlice({
         },
         FILTER_BY_PRICE(state, action) {
             const { products, price } = action.payload;
-            state.filteredProducts = products.filter(prod => setTTC(prod.priceHT, prod.tva.value) <= price)
+            state.filteredProducts = products.filter(prod => setTTCFilter(prod.priceHT, prod.tva.value) < price)
         }
     }
 })

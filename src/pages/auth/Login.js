@@ -5,9 +5,10 @@ import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGoogle } from 'react-icon
 import Card from '../../components/card/Card';
 import { toast } from 'react-toastify';
 import Loader from '../../components/loader/Loader';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SET_ACTIVE_USER, SET_IS_ADMIN } from '../../redux/slices/authSlice';
 import { useLoginMutation } from '../../redux/api/authApi';
+import { selectPreviousURL } from '../../redux/slices/cartSlice';
 
 const googleURL = process.env.REACT_APP_GOOGLE_URL
 
@@ -15,18 +16,24 @@ const Login = () => {
 
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
-
   const [ showPassword, setShowPassword ] = useState(false);
+
+  const previousURL = useSelector(selectPreviousURL)
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [ loginUser, { isLoading } ] = useLoginMutation()
 
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch()
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword)
   };
+
+  const redirectUser = () => {
+    if(previousURL.includes('cart')) navigate('/cart')
+    else navigate('/')
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +44,6 @@ const Login = () => {
 
     await loginUser({email, password}).unwrap()
     .then((result) => {
-      console.log(result)
       dispatch(
         SET_ACTIVE_USER({
           isLoggedIn: true,
@@ -51,10 +57,10 @@ const Login = () => {
         })
       }
       toast.success(`You're logged in`)
-      navigate('/')
+      redirectUser()
     })
     .catch((err) => {
-      toast.error('Something went wrong, please try again later')
+      toast.error(err.data.message)
     })
   }
 

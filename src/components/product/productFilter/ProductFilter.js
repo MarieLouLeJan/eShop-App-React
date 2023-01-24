@@ -28,6 +28,7 @@ const ProductFilter = ({products, categories}) => {
   }
 
   useEffect(() => {
+    console.log(price)
     dispatch(FILTER_BY_PRICE({
       products,
       price

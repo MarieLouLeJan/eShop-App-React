@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './auth.module.scss';
 import Card from '../../components/card/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useResetPasswordMutation } from '../../redux/api/authApi';
 import Loader from '../../components/loader/Loader';
+import { useDispatch } from 'react-redux';
+import { SAVE_URL } from '../../redux/slices/cartSlice';
 
 
 const Reset = () => {
 
-  const [ email, setEmail ] = useState('');
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  useEffect(() => {dispatch(SAVE_URL(""))}, [dispatch]);
 
+  const [ email, setEmail ] = useState('');
   const [ reset, { isLoading }] = useResetPasswordMutation()
 
-  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
