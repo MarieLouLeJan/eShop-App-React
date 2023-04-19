@@ -33,37 +33,30 @@ const Login = () => {
   };
 
   const redirectUser = () => {
-    if (previousURL.includes("cart")) navigate("/cart");
-    else navigate("/");
+    previousURL.includes("cart") ? navigate("/cart") : navigate("/");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (email && password) {
-      await loginUser({ email, password });
-    }
+    email && password && (await loginUser({ email, password }));
 
     await loginUser({ email, password })
       .unwrap()
       .then((result) => {
-        console.log(result.user.roles.id);
         dispatch(
           SET_ACTIVE_USER({
             isLoggedIn: true,
-            user: result.user,
+            user: result.data,
             JWT: result.token,
           })
         );
-        if (result.user.roles.id === 2) {
-          dispatch(SET_IS_ADMIN());
-        }
+        result.data.roles.id === 2 && dispatch(SET_IS_ADMIN());
         toast.success(`You're logged in`);
         redirectUser();
       })
       .catch((err) => {
-        console.log(err);
-        toast.error(err.data);
+        toast.error(err.data.message);
       });
   };
 
@@ -108,7 +101,7 @@ const Login = () => {
             </form>
 
             <br />
-            <button className="--btn --btn-danger --btn-block">
+            <button className="--btn --btn-primary --btn-block">
               <a href={googleURL}>
                 <AiOutlineGoogle color="#fff" />
                 Login with Google

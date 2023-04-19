@@ -24,14 +24,14 @@ const ViewProducts = () => {
 
   const [updateProduct, { isProdLoading }] = useUpdateProductPatchMutation();
 
-  const confirmUnactive = async (id) => {
+  const confirmToggleProduct = async (id, catId) => {
     Notiflix.Confirm.show(
       "Warning",
-      `You're about to unactive this product, it won't be on the store anymore`,
-      "Unactive",
+      "You're about to change the status of this product",
+      "Ok",
       "Cancel",
       function okCb() {
-        unactive(id);
+        toggleActive(id, catId);
       },
       function cancelCb() {
         toast.success("Changed your mind ? :)");
@@ -46,50 +46,20 @@ const ViewProducts = () => {
     );
   };
 
-  const confirmActive = async (id) => {
-    Notiflix.Confirm.show(
-      "Warning",
-      `You're about to active this product, it will appear on the store`,
-      "Active",
-      "Cancel",
-      function okCb() {
-        active(id);
-      },
-      function cancelCb() {
-        toast.success("Changed your mind ? :)");
-      },
-      {
-        width: "320px",
-        borderRadius: "8px",
-        titleColor: "red",
-        okButtonBackground: "green",
-        cssAnimationStyle: "fade",
-      }
-    );
-  };
-
-  const unactive = async (id) => {
+  const toggleActive = async (id, catId) => {
     // We don't want to delete completely the product, as we still need it for the past orders. What we do here is turning the 'active' to false, then it doesn't appear on the shop
-    const myBody = { body: { active: "false" }, id };
-
+    let myBody;
+    let category = categories.find((cat) => cat.id === catId);
+    let product = category.products.find((prod) => prod.id === id);
+    product.active
+      ? (myBody = { body: { active: "false" }, id })
+      : (myBody = { body: { active: "true" }, id });
     await updateProduct(myBody)
       .unwrap()
       .then((result) => {
-        toast.success(`${result.data.title} is now unactive !`);
-      })
-      .catch((err) => {
-        console.log(err.data.message);
-        toast.error("Sorry something went wrong");
-      });
-  };
-
-  const active = async (id) => {
-    const myBody = { body: { active: "true" }, id };
-
-    await updateProduct(myBody)
-      .unwrap()
-      .then((result) => {
-        toast.success(`${result.data.title} is now unactive !`);
+        product.active
+          ? toast.success(`${result.data.title} is now unactive !`)
+          : toast.success(`${result.data.title} is now active !`);
       })
       .catch((err) => {
         console.log(err.data.message);
@@ -99,7 +69,6 @@ const ViewProducts = () => {
 
   useEffect(() => {
     if (isCatSuccess) {
-      // catData.data.map(cat => cat.products.sort((a, b) => b.active - a.active))
       setCategories(catData.data);
     } else if (isCatError) {
       console.log(catError.data.message);
@@ -134,7 +103,7 @@ const ViewProducts = () => {
                   {cat.products.map((prod) => {
                     const {
                       id,
-                      ref,
+                      reference,
                       image,
                       title,
                       description,
@@ -146,7 +115,7 @@ const ViewProducts = () => {
                     return (
                       <tbody key={id}>
                         <tr>
-                          <td>{ref}</td>
+                          <td>{reference}</td>
                           <td>
                             <img
                               src={image}
@@ -169,13 +138,13 @@ const ViewProducts = () => {
                               <TbTrash
                                 size={20}
                                 color="red"
-                                onClick={() => confirmUnactive(id)}
+                                onClick={() => confirmToggleProduct(id, cat.id)}
                               />
                             ) : (
                               <TbTrashOff
                                 size={20}
                                 color="green"
-                                onClick={() => confirmActive(id)}
+                                onClick={() => confirmToggleProduct(id, cat.id)}
                               />
                             )}
                           </td>

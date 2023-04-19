@@ -4,7 +4,7 @@ import { Home, Login, Register, Reset, Admin } from "./pages";
 import SetNewPassword from "./pages/auth/SetNewPassword";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthGoogle from "./pages/auth/AuthGoogle";
+// import AuthGoogle from "./pages/auth/AuthGoogle";
 import { AdminOnlyRoute } from "./components/adminOnly/AdminOnlyRoute";
 import ProductDetails from "./components/product/productDetails/ProductDetails";
 import Cart from "./pages/cart/Cart";
@@ -37,7 +37,7 @@ function App() {
 
           <Route path="/reset-password/:token" element={<SetNewPassword />} />
 
-          <Route path="/authGoogle" element={<AuthGoogle />} />
+          {/* <Route path="/authGoogle" element={<AuthGoogle />} /> */}
 
           <Route
             path="/admin/*"

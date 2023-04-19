@@ -27,16 +27,16 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== cPassword) {
-      toast.error(`Passwords don't match`);
+      toast.error("Passwords don't match");
       return;
     }
-    const newUser = { firstname, lastname, email, password, role_id: 2 };
+    const newUser = { firstname, lastname, email, password, role_id: 1 };
 
     await registerUser(newUser)
       .unwrap()
       .then((result) => {
         toast.success(
-          `${result.user.firstname}, your account has been created`
+          `${result.data.firstname}, your account has been created`
         );
         navigate("/");
       })

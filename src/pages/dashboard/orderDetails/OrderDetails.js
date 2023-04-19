@@ -95,11 +95,15 @@ const OrderDetails = () => {
                         <td>{quantity}</td>
                         <td>€{(priceTTC * quantity).toFixed(2)}</td>
                         <td className={styles.icons}>
-                          <button className="--btn --btn-primary">
-                            <Link to={`/review-product/${product.id}`}>
-                              Review Product
-                            </Link>
-                          </button>
+                          {order.order_states_id === 4 ? (
+                            <button className="--btn --btn-primary">
+                              <Link to={`/review-product/${product.id}`}>
+                                Review Product
+                              </Link>
+                            </button>
+                          ) : (
+                            <p>Waiting for delivering</p>
+                          )}
                         </td>
                       </tr>
                     );

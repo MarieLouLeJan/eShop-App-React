@@ -22,8 +22,7 @@ const OrderHistory = () => {
     if (data) {
       setOrders(data.data);
     } else if (error) {
-      console.log(error.data.message);
-      toast.error("Sorry, something went wrong");
+      !error.data.message && toast.error("Sorry, something went wrong");
     }
   }, [data, error]);
 

@@ -49,7 +49,6 @@ const Checkout = () => {
       await createPayment(body)
         .unwrap()
         .then((result) => {
-          console.log(result);
           setClientSecret(result.clientSecret);
         })
         .catch((err) => {

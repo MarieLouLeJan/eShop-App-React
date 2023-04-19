@@ -33,10 +33,7 @@ const AddProduct = () => {
   const [product, setProduct] = useState(initialState);
 
   const detectForm = (id, f1, f2) => {
-    if (param === "ADD") {
-      return f1;
-    }
-    return f2;
+    return param === "ADD" ? f1 : f2;
   };
 
   const { data: tvaData } = useGetTvaAdminQuery();
@@ -47,11 +44,9 @@ const AddProduct = () => {
     useGetOneProductAdminQuery(parseInt(param));
 
   useEffect(() => {
-    if (catData) setCategories(catData.data);
-    if (tvaData) setTVA(tvaData.data);
-    if (prodOneIsSuccess) {
-      setProduct(prodOneData.data);
-    }
+    catData && setCategories(catData.data);
+    tvaData && setTVA(tvaData.data);
+    !isNaN(param) && prodOneIsSuccess && setProduct(prodOneData.data);
   }, [catData, tvaData, param, prodOneIsSuccess, prodOneData]);
 
   const handleInputChange = (e) => {
@@ -79,7 +74,6 @@ const AddProduct = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(product);
     await addProduct(product)
       .unwrap()
       .then((result) => {
@@ -101,9 +95,7 @@ const AddProduct = () => {
       tva,
       ...productToEdit
     } = product;
-    const P = parseInt(param);
-    const myObject = { body: productToEdit, id: P };
-    console.log(productToEdit);
+    const myObject = { body: productToEdit, id: parseInt(param) };
     await updateProductPatch(myObject)
       .unwrap()
       .then((result) => {
@@ -166,13 +158,27 @@ const AddProduct = () => {
 
             <label>Product stock :</label>
             <input
-              type="number"
+              type="text"
               placeholder="Product stock"
               required
               name="stock"
               value={product.stock}
               onChange={(e) => handleInputChange(e)}
             />
+
+            <label htmlFor="tva_select">Product Active :</label>
+            <select
+              name="active"
+              id="active"
+              onChange={(e) => handleInputChange(e)}
+            >
+              <option value="" autoFocus>
+                {" "}
+                -- choose is Active ? --
+              </option>
+              <option value="true">true</option>
+              <option value="false">false</option>
+            </select>
 
             <label htmlFor="tva_select">Product TVA :</label>
             <select

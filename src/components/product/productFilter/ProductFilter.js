@@ -89,7 +89,7 @@ const ProductFilter = ({ products, categories }) => {
 
         <br />
 
-        <button className="--btn --btn-danger" onClick={clearFilters}>
+        <button className="--btn --btn-primary" onClick={clearFilters}>
           Clear filter
         </button>
       </div>

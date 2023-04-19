@@ -1,19 +1,17 @@
 const dateFormat = (inputDate, format) => {
-    const date = new Date(inputDate);
+  const date = new Date(inputDate);
 
-    const day = date.getDate();
-    const month = date.getMonth() +1;
-    const year = date.getFullYear();    
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
 
-    format = format.replace("MM", month.toString().padStart(2,"0"));        
+  format = format.replace("MM", month.toString().padStart(2, "0"));
 
-    if (format.indexOf("yyyy") > -1) {
-        format = format.replace("yyyy", year.toString());
-    }
+  if (format.indexOf("yyyy") > -1) {
+    format = format.replace("yyyy", year.toString());
+  }
 
-    format = format.replace("dd", day.toString().padStart(2,"0"));
-
-    return format;
+  return format.replace("dd", day.toString().padStart(2, "0"));
 };
 
-export default dateFormat
+export default dateFormat;

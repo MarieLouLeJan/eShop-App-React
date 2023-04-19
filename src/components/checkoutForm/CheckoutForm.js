@@ -67,7 +67,6 @@ const CheckoutForm = (props) => {
   };
   const saveOrderProduct = async (orderId) => {
     const orderProductBody = [];
-    console.log(products[0]);
     for (const prod of products) {
       const { title, ...rest } = prod;
       orderProductBody.push(rest);

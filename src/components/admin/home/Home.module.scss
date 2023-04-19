@@ -1,21 +1,19 @@
 .info-box {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .card {
-    border: 1px solid #ccc;
-    // border-bottom: 3px solid var(--light-blue);
-    padding: 5px;
-    background-color: #f5f6fa;
-  }
-  
-  .cardEarning {
-    border-bottom: 3px solid #b624ff;
-  }
-  .cardProducts {
-    border-bottom: 3px solid #1f93ff;
-  }
-  .cardOrders {
-    border-bottom: 3px solid rgb(51, 175, 88);
-  }
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.cardEarning {
+  border-bottom: 3px solid #b624ff;
+}
+.cardProducts {
+  border-bottom: 3px solid #1f93ff;
+}
+.cardOrders {
+  border-bottom: 3px solid #00c57d;
+}
